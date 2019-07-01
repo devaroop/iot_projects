@@ -31,7 +31,6 @@ extern "C" {
 char ssid[] = "";
 char pass[] = "";
 void setup() {
-  delay(2000);
   Serial.begin (9600);
   Serial.println("SETUP....");
   WiFi.forceSleepBegin();                  // turn off ESP8266 RF
@@ -55,7 +54,7 @@ void setup() {
 
 void loop() {
   Serial.println("INIT.....");
-  digitalWrite(BUILTIN_LED, HIGH);
+  //digitalWrite(BUILTIN_LED, HIGH);
   long duration, distance;
   digitalWrite(TRIGGER, LOW);  
   delayMicroseconds(2); 
@@ -67,8 +66,10 @@ void loop() {
   duration = pulseIn(ECHO, HIGH);
   distance = (duration/2) / 29.1;
 
-  if(distance == 0) {
-    delay(3000);
+  if(distance <= 0 || distance >= 400) {
+    Serial.print(distance);
+    Serial.println("OUT OF RANGE");
+    delay(500);
     return;
   }
   
@@ -120,6 +121,6 @@ void loop() {
   Serial.print(distance);
   Serial.println("Centimeter:");
   //Blynk.virtualWrite(V5, distance);
-  delay(2000);
+  delay(1000);
   //Blynk.run();
 }
